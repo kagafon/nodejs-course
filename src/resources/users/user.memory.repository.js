@@ -1,19 +1,6 @@
 const tasksRepo = require('../tasks/task.memory.repository');
 const User = require('./user.model');
-const usersStorage = [
-  new User({
-    id: '69fe4ab3-8030-43d6-95c5-4f91110473ab',
-    name: 'test',
-    login: 'test',
-    password: 'asljbadfjkbd'
-  }),
-  new User({
-    id: '69fe4ab3-8030-43d6-95c5-4f9ea50473ab',
-    name: 'user',
-    login: 'user12sdfsdfs3',
-    password: 'asljbadfjkbdasdasd'
-  })
-];
+const usersStorage = [];
 
 const getAll = async () => {
   return usersStorage;

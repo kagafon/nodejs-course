@@ -2,16 +2,7 @@ const Board = require('./board.model');
 const Column = require('./column.model');
 const tasksRepo = require('../tasks/task.memory.repository');
 
-const boardsStorage = [
-  new Board({
-    id: '69fe4ab3-8030-43d6-95c5-4f91110473ab',
-    title: 'test'
-  }),
-  new Board({
-    id: '69fe4ab3-8030-43d6-95c5-4f9ea50473ab',
-    title: 'test1'
-  })
-];
+const boardsStorage = [];
 
 const getAll = async () => {
   return boardsStorage;

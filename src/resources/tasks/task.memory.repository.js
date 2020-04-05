@@ -1,12 +1,5 @@
 const Task = require('./task.model');
-const tasksStorage = [
-  new Task({
-    id: '69fe4ab3-8030-43d6-95c5-4f91110473ab',
-    title: 'test',
-    description: 'test descr',
-    boardId: '69fe4ab3-8030-43d6-95c5-4f91110473ab'
-  })
-];
+const tasksStorage = [];
 
 const getAllByBoardId = async boardId => {
   return tasksStorage.filter(x => x.boardId === boardId);
