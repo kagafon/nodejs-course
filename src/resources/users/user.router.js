@@ -1,50 +1,58 @@
 const router = require('express').Router();
 const User = require('./user.model');
+const { OK, NO_CONTENT } = require('http-status-codes');
 const usersService = require('./user.service');
 
 router
   .route('/')
-  .get(async (req, res) => {
-    const users = await usersService.getAll();
-    // map user fields to exclude secret fields like "password"
-    res.json(users.map(User.toResponse));
+  .get(async (req, res, next) => {
+    try {
+      res.status(OK).json((await usersService.getAll()).map(User.toResponse));
+    } catch (err) {
+      return next(err);
+    }
   })
-  .post(async (req, res) => {
+  .post(async (req, res, next) => {
     const { name, login, password } = req.body;
-    const user = await usersService.add(name, login, password);
-    res.json(User.toResponse(user));
+    try {
+      res
+        .status(OK)
+        .json(User.toResponse(await usersService.add(name, login, password)));
+    } catch (err) {
+      return next(err);
+    }
   });
 
 router
-  .route('/:uid')
-  .get(async (req, res) => {
-    const user = await usersService.getById(req.params.uid);
-    if (user) {
-      res.json(User.toResponse(user));
-    } else {
-      res.status(404).send('Not found.');
+  .route('/:userId')
+  .get(async (req, res, next) => {
+    try {
+      res
+        .status(OK)
+        .json(User.toResponse(await usersService.getById(req.params.userId)));
+    } catch (err) {
+      return next(err);
     }
   })
-  .put(async (req, res) => {
+  .put(async (req, res, next) => {
     const { name, login, password } = req.body;
-    const user = await usersService.update(
-      req.params.uid,
-      name,
-      login,
-      password
-    );
-    if (user) {
-      res.json(User.toResponse(user));
-    } else {
-      res.status(404).send('Not found.');
+    try {
+      res
+        .status(OK)
+        .json(
+          User.toResponse(
+            await usersService.update(req.params.userId, name, login, password)
+          )
+        );
+    } catch (err) {
+      return next(err);
     }
   })
-  .delete(async (req, res) => {
-    const deletedUser = await usersService.del(req.params.uid);
-    if (deletedUser) {
-      res.status(204).json(User.toResponse(deletedUser));
-    } else {
-      res.status(404).send('Not found.');
+  .delete(async (req, res, next) => {
+    try {
+      res.status(NO_CONTENT).json(await usersService.del(req.params.userId));
+    } catch (err) {
+      return next(err);
     }
   });
 

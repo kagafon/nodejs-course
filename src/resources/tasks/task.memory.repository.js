@@ -2,7 +2,7 @@ const Task = require('./task.model');
 const tasksStorage = [];
 
 const getAllByBoardId = async boardId => {
-  return tasksStorage.filter(x => x.boardId === boardId);
+  return await tasksStorage.filter(x => x.boardId === boardId);
 };
 
 const getById = async (boardId, taskId) => {
@@ -10,7 +10,7 @@ const getById = async (boardId, taskId) => {
 };
 
 const add = async (title, order, description, userId, boardId, columnId) => {
-  const newtask = new Task({
+  const newTask = new Task({
     title,
     order,
     description,
@@ -18,8 +18,8 @@ const add = async (title, order, description, userId, boardId, columnId) => {
     boardId,
     columnId
   });
-  tasksStorage.push(newtask);
-  return newtask;
+  tasksStorage.push(newTask);
+  return newTask;
 };
 
 const update = async (searchBoardId, taskId, newValues) => {

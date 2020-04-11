@@ -1,45 +1,49 @@
 const router = require('express').Router();
 const boardsService = require('./board.service');
 const tasksRouter = require('../tasks/task.router');
+const { OK, NO_CONTENT } = require('http-status-codes');
 router
   .route('/')
-  .get(async (req, res) => {
-    res.json(await boardsService.getAll());
+  .get(async (req, res, next) => {
+    try {
+      res.status(OK).json(await boardsService.getAll());
+    } catch (err) {
+      return next(err);
+    }
   })
-  .post(async (req, res) => {
+  .post(async (req, res, next) => {
     const { title, columns } = req.body;
-    res.json(await boardsService.add(title, columns));
+    try {
+      res.status(OK).json(await boardsService.add(title, columns));
+    } catch (err) {
+      return next(err);
+    }
   });
 
 router
   .route('/:boardId')
-  .get(async (req, res) => {
-    const board = await boardsService.getById(req.params.boardId);
-    if (board) {
-      res.json(board);
-    } else {
-      res.status(404).send('Not found.');
+  .get(async (req, res, next) => {
+    try {
+      res.status(OK).json(await boardsService.getById(req.params.boardId));
+    } catch (err) {
+      return next(err);
     }
   })
-  .put(async (req, res) => {
+  .put(async (req, res, next) => {
     const { title, columns } = req.body;
-    const board = await boardsService.update(
-      req.params.boardId,
-      title,
-      columns
-    );
-    if (board) {
-      res.json(board);
-    } else {
-      res.status(404).send('Not found.');
+    try {
+      res
+        .status(OK)
+        .json(await boardsService.update(req.params.boardId, title, columns));
+    } catch (err) {
+      return next(err);
     }
   })
-  .delete(async (req, res) => {
-    const deletedBoard = await boardsService.del(req.params.boardId);
-    if (deletedBoard) {
-      res.status(204).json(deletedBoard);
-    } else {
-      res.status(404).send('Not found.');
+  .delete(async (req, res, next) => {
+    try {
+      res.status(NO_CONTENT).json(await boardsService.del(req.params.boardId));
+    } catch (err) {
+      return next(err);
     }
   });
 router.use('/:boardId/tasks', tasksRouter);
