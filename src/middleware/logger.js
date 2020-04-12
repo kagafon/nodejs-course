@@ -1,6 +1,8 @@
 const winston = require('winston');
 const expressWinston = require('express-winston');
 const { HttpError, InternalServerError } = require('http-errors');
+const { exit } = process;
+
 require('winston-daily-rotate-file');
 
 const eventLogger = winston.createLogger({
@@ -31,21 +33,13 @@ const eventLogger = winston.createLogger({
 const expressEventLogger = expressWinston.logger({
   winstonInstance: eventLogger,
   statusLevels: true,
+  meta: false,
   msg:
     'HTTP ({{res.statusCode}}) {{req.method}}: {{req.path}}, query params: {{JSON.stringify(req.query)}}, request body: {{JSON.stringify(req.body)}}'
 });
 
 const errorLogger = expressWinston.errorLogger({
-  transports: [
-    new winston.transports.DailyRotateFile({
-      level: 'error',
-      filename: 'error-%DATE%.log',
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-      )
-    })
-  ],
+  winstonInstance: eventLogger,
   meta: false,
   statusLevels: true,
   dumpExceptions: true,
@@ -77,9 +71,9 @@ const uncaughtExceptionHandler = err => {
     level: 'error',
     message: `Unhandled exception: ${err.message}, stack: ${err.stack}`
   });
+  eventLogger.on('finish', () => exit(1));
   // Continue regular process shutdown.
   // https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
-  throw err;
 };
 
 module.exports = {
