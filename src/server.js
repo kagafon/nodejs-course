@@ -1,3 +1,12 @@
+const {
+  unhandledPromiseRejectionHandler,
+  uncaughtExceptionHandler
+} = require('./middleware/logger');
+
+process
+  .on('unhandledRejection', unhandledPromiseRejectionHandler)
+  .on('uncaughtException', uncaughtExceptionHandler);
+
 const { PORT } = require('./common/config');
 const app = require('./app');
 
