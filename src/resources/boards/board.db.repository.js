@@ -45,8 +45,8 @@ const del = async boardId => {
   const board = await getById(boardId);
   if (board) {
     board.columns.forEach(x => x.remove());
-    tasksRepo.deleteByBoardId(boardId);
-    board.remove();
+    await tasksRepo.deleteByBoardId(boardId);
+    await board.remove();
     return board;
   }
   return false;

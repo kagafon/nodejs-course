@@ -32,7 +32,7 @@ const update = async (boardId, _id, newValues) => {
 const del = async (boardId, _id) => {
   const foundTask = Task.findOne({ boardId, _id });
   if (foundTask) {
-    foundTask.remove();
+    await foundTask.remove();
     return foundTask;
   }
   return false;

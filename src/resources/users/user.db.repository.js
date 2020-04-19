@@ -31,7 +31,7 @@ const update = async (userId, name, login, password) => {
 const del = async userId => {
   const foundUser = await User.findById(userId);
   if (foundUser) {
-    foundUser.remove();
+    await foundUser.remove();
     await tasksRepo.resetUser(userId);
     return foundUser;
   }
