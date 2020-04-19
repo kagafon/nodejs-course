@@ -1,4 +1,4 @@
-const tasksRepo = require('./task.memory.repository');
+const tasksRepo = require('./task.db.repository');
 const { validateId, checkExistence } = require('../../common/utils');
 
 const getAllByBoardId = async boardId => {

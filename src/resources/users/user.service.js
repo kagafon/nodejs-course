@@ -1,4 +1,4 @@
-const usersRepo = require('./user.memory.repository');
+const usersRepo = require('./user.db.repository');
 const { validateId, checkExistence } = require('../../common/utils');
 
 const getAll = async () => {

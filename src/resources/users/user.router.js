@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const User = require('./user.model');
+const { User } = require('./user.model');
 const { OK, NO_CONTENT } = require('http-status-codes');
 const usersService = require('./user.service');
 
@@ -7,7 +7,9 @@ router
   .route('/')
   .get(async (req, res, next) => {
     try {
-      res.status(OK).json((await usersService.getAll()).map(User.toResponse));
+      res
+        .status(OK)
+        .json(await (await usersService.getAll()).map(User.toResponse));
     } catch (err) {
       return next(err);
     }
