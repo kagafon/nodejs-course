@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
   {
     _id: { type: String, default: uuid },
     name: String,
-    login: String,
+    login: { type: String, required: true, unique: true },
     password: String
   },
   { versionKey: false }

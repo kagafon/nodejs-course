@@ -28,4 +28,8 @@ const del = async userId => {
   return await checkExistence(usersRepo.del, 'User', validateId(userId));
 };
 
-module.exports = { getAll, getById, add, update, del };
+const getByLogin = async login => {
+  return await usersRepo.getByLogin(login);
+};
+
+module.exports = { getAll, getById, add, update, del, getByLogin };

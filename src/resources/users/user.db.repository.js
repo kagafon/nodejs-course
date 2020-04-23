@@ -1,5 +1,6 @@
 const tasksRepo = require('../tasks/task.db.repository');
 const { User } = require('./user.model');
+const bcrypt = require('bcrypt');
 
 const getAll = async () => {
   console.log(User);
@@ -11,7 +12,8 @@ const getById = async userId => {
 };
 
 const add = async (name, login, password) => {
-  const newUser = new User({ name, login, password });
+  const hash = await bcrypt.hash(password, 10);
+  const newUser = new User({ name, login, password: hash });
   await newUser.save();
   return newUser;
 };
@@ -19,9 +21,10 @@ const add = async (name, login, password) => {
 const update = async (userId, name, login, password) => {
   const foundUser = await User.findById(userId);
   if (foundUser) {
+    const hash = await bcrypt.hash(password, 10);
     foundUser.name = name;
     foundUser.login = login;
-    foundUser.password = password;
+    foundUser.password = hash;
     await foundUser.save();
     return foundUser;
   }
@@ -38,4 +41,8 @@ const del = async userId => {
   return false;
 };
 
-module.exports = { getAll, getById, add, update, del };
+const getByLogin = async login => {
+  return await User.findOne({ login });
+};
+
+module.exports = { getAll, getById, add, update, del, getByLogin };
