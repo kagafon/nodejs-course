@@ -3,7 +3,6 @@ const { User } = require('./user.model');
 const bcrypt = require('bcrypt');
 
 const getAll = async () => {
-  console.log(User);
   return await User.find({});
 };
 
